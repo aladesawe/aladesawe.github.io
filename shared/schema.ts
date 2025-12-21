@@ -1,26 +1,29 @@
-import { pgTable, text, serial, integer, boolean } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const projects = pgTable("projects", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  description: text("description").notNull(),
-  url: text("url"), // Live site URL
-  githubUrl: text("github_url"), // Repo URL
-  category: text("category").notNull().default("General"),
-  language: text("language"),
-  stars: integer("stars").default(0),
-  isFeatured: boolean("is_featured").default(false),
+// Simple project type - no database needed
+export interface Project {
+  id: number;
+  name: string;
+  description: string;
+  url: string | null;
+  githubUrl: string | null;
+  category: string;
+  language: string | null;
+  stars: number | null;
+  isFeatured: boolean | null;
+}
+
+export const insertProjectSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  url: z.string().nullable().optional(),
+  githubUrl: z.string().nullable().optional(),
+  category: z.string().default("General"),
+  language: z.string().nullable().optional(),
+  stars: z.number().nullable().optional(),
+  isFeatured: z.boolean().nullable().optional(),
 });
 
-export const insertProjectSchema = createInsertSchema(projects).omit({ 
-  id: true 
-});
-
-export type Project = typeof projects.$inferSelect;
 export type InsertProject = z.infer<typeof insertProjectSchema>;
-
-// Explicit API types
 export type CreateProjectRequest = InsertProject;
 export type UpdateProjectRequest = Partial<InsertProject>;
