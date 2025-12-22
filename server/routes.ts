@@ -21,5 +21,13 @@ export async function registerRoutes(
     res.json(project);
   });
 
+  app.get(api.projects.getBySlug.path, async (req, res) => {
+    const project = await storage.getProjectBySlug(req.params.slug);
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+    res.json(project);
+  });
+
   return httpServer;
 }

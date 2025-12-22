@@ -1,11 +1,7 @@
 import { z } from 'zod';
-import { insertProjectSchema, type Project } from './schema';
+import { type Project } from './schema';
 
 export const errorSchemas = {
-  validation: z.object({
-    message: z.string(),
-    field: z.string().optional(),
-  }),
   notFound: z.object({
     message: z.string(),
   }),
@@ -26,6 +22,14 @@ export const api = {
     get: {
       method: 'GET' as const,
       path: '/api/projects/:id',
+      responses: {
+        200: z.custom<Project>(),
+        404: errorSchemas.notFound,
+      },
+    },
+    getBySlug: {
+      method: 'GET' as const,
+      path: '/api/projects/slug/:slug',
       responses: {
         200: z.custom<Project>(),
         404: errorSchemas.notFound,
