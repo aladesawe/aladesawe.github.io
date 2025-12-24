@@ -7,7 +7,7 @@ export function Logo() {
         <span className="font-mono text-2xl font-bold leading-none select-none">@</span>
       </div>
       <span className="text-xl font-bold tracking-tight text-foreground group-hover:text-primary transition-colors">
-        Developer
+        Yemi
       </span>
     </Link>
   );
