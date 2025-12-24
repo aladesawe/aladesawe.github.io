@@ -1,5 +1,5 @@
 import { Project } from "@shared/schema";
-import { Github, Star, Globe } from "lucide-react";
+import { Github, Star, FileText } from "lucide-react";
 import { Link } from "wouter";
 
 interface ProjectCardProps {
@@ -11,6 +11,8 @@ function toSlug(name: string): string {
 }
 
 export function ProjectCard({ project }: ProjectCardProps) {
+  const slug = toSlug(project.name);
+  
   return (
     <div
       className="group relative flex flex-col bg-card border border-border rounded-md p-6 h-full transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1"
@@ -18,7 +20,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
     >
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-2 flex-wrap">
-          <Link href={`/projects/${toSlug(project.name)}`}>
+          <Link href={`/projects/${slug}`}>
             <h3 
               className="text-lg font-bold text-foreground group-hover:text-primary transition-colors cursor-pointer"
               data-testid={`text-project-name-${project.id}`}
@@ -48,17 +50,16 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
       <div className="mt-auto pt-4 border-t border-border/50 flex items-center justify-between gap-2 text-sm flex-wrap">
         <div className="flex items-center gap-4 font-medium flex-wrap">
-          {project.url && (
-            <a
-              href={project.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-primary hover:text-primary/80 hover:underline decoration-2 underline-offset-4 transition-colors"
-              data-testid={`link-website-${project.id}`}
-            >
-              <Globe className="w-4 h-4" />
-              Website
-            </a>
+          {project.githubUrl && (
+            <Link href={`/projects/${slug}/docs`}>
+              <span
+                className="flex items-center gap-1.5 text-primary hover:text-primary/80 hover:underline decoration-2 underline-offset-4 transition-colors cursor-pointer"
+                data-testid={`link-docs-${project.id}`}
+              >
+                <FileText className="w-4 h-4" />
+                Docs
+              </span>
+            </Link>
           )}
           {project.githubUrl && (
             <a
