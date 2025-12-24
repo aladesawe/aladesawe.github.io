@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "wouter";
 import { ArrowLeft, Github, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Project } from "@shared/schema";
@@ -64,6 +65,7 @@ export default function ReadmePage() {
                 </Button>
               </a>
             )}
+            <ThemeToggle />
           </div>
         </div>
       </header>

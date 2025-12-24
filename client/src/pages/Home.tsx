@@ -4,6 +4,7 @@ import { Logo } from "@/components/Logo";
 import { Navigation } from "@/components/Navigation";
 import { ProjectCard } from "@/components/ProjectCard";
 import { Footer } from "@/components/Footer";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Loader2, AlertCircle, Grid } from "lucide-react";
 
 export default function Home() {
@@ -16,8 +17,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
       <header className="py-12 md:py-16 border-b border-border bg-background">
-        <div className="container-custom flex items-center justify-between">
+        <div className="container-custom flex items-center justify-between gap-4">
           <Logo />
+          <ThemeToggle />
         </div>
         <div className="container-custom mt-8 max-w-2xl">
           <h1 className="text-4xl font-bold tracking-tight mb-4" data-testid="text-hero-title">
