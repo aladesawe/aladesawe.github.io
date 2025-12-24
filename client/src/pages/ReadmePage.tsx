@@ -6,14 +6,6 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Project } from "@shared/schema";
 
-function extractGithubInfo(githubUrl: string): { owner: string; repo: string } | null {
-  const match = githubUrl.match(/github\.com\/([^/]+)\/([^/]+)/);
-  if (match) {
-    return { owner: match[1], repo: match[2].replace(/\.git$/, '') };
-  }
-  return null;
-}
-
 export default function ReadmePage() {
   const params = useParams<{ slug: string }>();
   
@@ -21,28 +13,12 @@ export default function ReadmePage() {
     queryKey: ['/api/projects/slug', params.slug],
   });
 
-  const githubInfo = project?.githubUrl ? extractGithubInfo(project.githubUrl) : null;
-
-  const { data: readme, isLoading: readmeLoading, error: readmeError } = useQuery<string>({
-    queryKey: ['readme', githubInfo?.owner, githubInfo?.repo],
-    queryFn: async () => {
-      if (!githubInfo) throw new Error('No GitHub URL');
-      const branches = ['main', 'master'];
-      for (const branch of branches) {
-        try {
-          const res = await fetch(
-            `https://raw.githubusercontent.com/${githubInfo.owner}/${githubInfo.repo}/${branch}/README.md`
-          );
-          if (res.ok) return res.text();
-        } catch {
-          continue;
-        }
-      }
-      throw new Error('README not found');
-    },
-    enabled: !!githubInfo,
+  const { data: readmeData, isLoading: readmeLoading, error: readmeError } = useQuery<{ readme: string }>({
+    queryKey: ['/api/projects/slug', params.slug, 'readme'],
+    enabled: !!project,
   });
 
+  const readme = readmeData?.readme;
   const isLoading = projectLoading || readmeLoading;
 
   if (isLoading) {
