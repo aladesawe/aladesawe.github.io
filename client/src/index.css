@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Square.github.io inspired palette */
+  --background: 0 0% 100%;
+  --foreground: 210 9% 19%; /* Dark grey #24292e */
+  
+  --primary: 217 58% 50%; /* #366dc7 Blue accent */
+  --primary-foreground: 0 0% 100%;
+
+  --muted: 210 9% 96%;
+  --muted-foreground: 210 9% 45%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 210 9% 19%;
+  
+  --border: 210 14% 89%; /* #e1e4e8 */
+  --input: 210 14% 89%;
+  
+  --ring: 217 58% 50%;
+  
+  --radius: 0.25rem; /* 4px - squarish look */
+
+  --secondary: 210 14% 96%;
+  --secondary-foreground: 210 9% 19%;
+
+  --accent: 210 14% 96%;
+  --accent-foreground: 210 9% 19%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 210 9% 19%;
+}
+
+.dark {
+  --background: 220 13% 10%;
+  --foreground: 210 14% 89%;
+  
+  --primary: 217 58% 55%;
+  --primary-foreground: 0 0% 100%;
+
+  --muted: 220 13% 18%;
+  --muted-foreground: 210 14% 65%;
+
+  --card: 220 13% 13%;
+  --card-foreground: 210 14% 89%;
+  
+  --border: 220 13% 20%;
+  --input: 220 13% 20%;
+  
+  --ring: 217 58% 55%;
+
+  --secondary: 220 13% 18%;
+  --secondary-foreground: 210 14% 89%;
+
+  --accent: 220 13% 18%;
+  --accent-foreground: 210 14% 89%;
+
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+
+  --popover: 220 13% 13%;
+  --popover-foreground: 210 14% 89%;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  code {
+    font-family: 'Fira Code', monospace;
+  }
+}
+
+@layer components {
+  .container-custom {
+    @apply max-w-screen-xl mx-auto px-6 md:px-12 lg:px-20;
+  }
+}
