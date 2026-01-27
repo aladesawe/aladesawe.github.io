@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1,
+    "name": "Vision Mask",
+    "description": "Computer vision project for mask detection and analysis.",
+    "url": null,
+    "githubUrl": "https://github.com/aladesawe/vision_mask",
+    "category": "Computer Vision",
+    "language": "Python",
+    "stars": null,
+    "isFeatured": true
+  }
+]
