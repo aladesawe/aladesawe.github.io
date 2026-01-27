@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build
+    name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -39,20 +39,15 @@ jobs:
       - name: Build client
         run: npm run build
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist/public
+      - name: Copy build to docs folder
+        run: |
+          rm -rf docs
+          cp -r dist/public docs
 
-  deploy:
-    name: Deploy
-    needs: build
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Commit and push if changed
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add docs
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Deploy React app to docs folder" && git push)
