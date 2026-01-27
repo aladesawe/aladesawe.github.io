@@ -10,13 +10,41 @@ import type { Project } from "@shared/schema";
 export default function ReadmePage() {
   const params = useParams<{ slug: string }>();
   
-  const { data: project, isLoading: projectLoading } = useQuery<Project>({
+  const { data: project, isLoading: projectLoading } = useQuery<Project | null>({
     queryKey: ['/api/projects/slug', params.slug],
+    queryFn: async () => {
+      const res = await fetch("/projects.json");
+      if (!res.ok) throw new Error("Failed to fetch projects");
+      
+      const allProjects: Project[] = await res.json();
+      return allProjects.find(p => p.name.toLowerCase().replace(/\s+/g, '-') === params.slug) || null;
+    },
   });
 
   const { data: readmeData, isLoading: readmeLoading, error: readmeError } = useQuery<{ readme: string }>({
     queryKey: ['/api/projects/slug', params.slug, 'readme'],
     enabled: !!project,
+    queryFn: async () => {
+      if (!project?.githubUrl) throw new Error("No GitHub URL");
+      
+      // Extract owner/repo from GitHub URL
+      const match = project.githubUrl.match(/github\.com\/([^/]+)\/([^/]+)/);
+      if (!match) throw new Error("Invalid GitHub URL");
+      
+      const [, owner, repo] = match;
+      const repoName = repo.replace(/\.git$/, '');
+      
+      // Fetch README from GitHub raw content
+      const readmeRes = await fetch(
+        `https://raw.githubusercontent.com/${owner}/${repoName}/main/README.md`
+      ).catch(() => 
+        fetch(`https://raw.githubusercontent.com/${owner}/${repoName}/master/README.md`)
+      );
+      
+      if (!readmeRes.ok) throw new Error("README not found");
+      
+      return { readme: await readmeRes.text() };
+    },
   });
 
   const readme = readmeData?.readme;

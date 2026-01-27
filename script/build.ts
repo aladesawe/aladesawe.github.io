@@ -35,6 +35,10 @@ const allowlist = [
 async function buildAll() {
   await rm("dist", { recursive: true, force: true });
 
+  console.log("generating projects.json...");
+  const { execSync } = await import("child_process");
+  execSync("tsx script/generate-projects.ts", { stdio: "inherit" });
+
   console.log("building client...");
   await viteBuild();
 

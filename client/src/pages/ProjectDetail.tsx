@@ -10,8 +10,15 @@ import type { Project } from "@shared/schema";
 export default function ProjectDetail() {
   const params = useParams<{ slug: string }>();
   
-  const { data: project, isLoading, error } = useQuery<Project>({
+  const { data: project, isLoading, error } = useQuery<Project | null>({
     queryKey: ['/api/projects/slug', params.slug],
+    queryFn: async () => {
+      const res = await fetch("/projects.json");
+      if (!res.ok) throw new Error("Failed to fetch projects");
+      
+      const allProjects: Project[] = await res.json();
+      return allProjects.find(p => p.name.toLowerCase().replace(/\s+/g, '-') === params.slug) || null;
+    },
   });
 
   if (isLoading) {
