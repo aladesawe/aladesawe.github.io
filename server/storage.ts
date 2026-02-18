@@ -15,6 +15,17 @@ const projects: Project[] = [
   },
   {
     id: 2,
+    name: "Split Records",
+    description: "A C utility to split large database-exported files by record boundaries, inspired by the deficiency in the Unix split utility which can split a record across multiple files.",
+    url: null,
+    githubUrl: "https://github.com/AdeyemiA/split_records",
+    category: "Tool",
+    language: "C",
+    stars: null,
+    isFeatured: false
+  },
+  {
+    id: 3,
     name: "Neural Networks and Deep Learning",
     description: "Fork of Michael Nielsen's neural network codebase with Python 3.11 support, matrix-based SGD, early stopping, learning rate scheduling, and modern tensor library updates.",
     url: null,
