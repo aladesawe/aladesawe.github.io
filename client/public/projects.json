@@ -23,6 +23,17 @@
   },
   {
     "id": 3,
+    "name": "Time Series Analysis",
+    "description": "A Java tool that performs linear regression on household electric power consumption data from the UCI Machine Learning Repository.",
+    "url": null,
+    "githubUrl": "https://github.com/AdeyemiA/TimeSeriesAnalysis",
+    "category": "Tool",
+    "language": "Java",
+    "stars": null,
+    "isFeatured": false
+  },
+  {
+    "id": 4,
     "name": "Neural Networks and Deep Learning",
     "description": "Fork of Michael Nielsen's neural network codebase with Python 3.11 support, matrix-based SGD, early stopping, learning rate scheduling, and modern tensor library updates.",
     "url": null,
