@@ -1,18 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "wouter";
 import { ArrowLeft, ExternalLink, FileText } from "lucide-react";
 import { SiGithub } from "react-icons/si";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import type { Project } from "@shared/schema";
+import { useProjectBySlug } from "@/hooks/use-projects";
 
 export default function ProjectDetail() {
   const params = useParams<{ slug: string }>();
   
-  const { data: project, isLoading, error } = useQuery<Project>({
-    queryKey: ['/api/projects/slug', params.slug],
-  });
+  const { data: project, isLoading, error } = useProjectBySlug(params.slug);
 
   if (isLoading) {
     return (

@@ -7,6 +7,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Project } from "@shared/schema";
 import type { Components } from "react-markdown";
+import { useProjectBySlug } from "@/hooks/use-projects";
 
 const VIDEO_EXTENSIONS = ['.mp4', '.webm', '.ogg', '.mov', '.MOV'];
 
@@ -41,19 +42,97 @@ function preprocessMarkdown(md: string): string {
   );
 }
 
+function extractGithubInfo(githubUrl: string): { owner: string; repo: string } | null {
+  const match = githubUrl.match(/github\.com\/([^/]+)\/([^/]+)/);
+  if (match) {
+    return { owner: match[1], repo: match[2].replace(/\.git$/, '') };
+  }
+  return null;
+}
+
+async function fetchReadmeWithContributions(githubUrl: string): Promise<string> {
+  const githubInfo = extractGithubInfo(githubUrl);
+  if (!githubInfo) throw new Error("Invalid GitHub URL");
+
+  let readme = '';
+  const branches = ['main', 'master'];
+  for (const branch of branches) {
+    try {
+      const response = await fetch(
+        `https://raw.githubusercontent.com/${githubInfo.owner}/${githubInfo.repo}/${branch}/README.md`
+      );
+      if (response.ok) {
+        readme = await response.text();
+        break;
+      }
+    } catch {
+      continue;
+    }
+  }
+
+  if (!readme) throw new Error("README not found");
+
+  try {
+    const commitsRes = await fetch(
+      `https://api.github.com/repos/${githubInfo.owner}/${githubInfo.repo}/commits?author=${githubInfo.owner}&per_page=30`,
+      { headers: { 'Accept': 'application/vnd.github.v3+json' } }
+    );
+    if (commitsRes.ok) {
+      const commits = await commitsRes.json() as Array<{
+        sha: string;
+        html_url: string;
+        commit: { message: string; author: { date: string } };
+      }>;
+      if (commits.length > 0) {
+        const parentRes = await fetch(
+          `https://api.github.com/repos/${githubInfo.owner}/${githubInfo.repo}`,
+          { headers: { 'Accept': 'application/vnd.github.v3+json' } }
+        );
+        let isFork = false;
+        let parentFullName = '';
+        if (parentRes.ok) {
+          const repoData = await parentRes.json() as { fork: boolean; parent?: { full_name: string } };
+          isFork = repoData.fork;
+          if (repoData.parent) {
+            parentFullName = repoData.parent.full_name;
+          }
+        }
+
+        readme += '\n\n---\n\n';
+        if (isFork && parentFullName) {
+          readme += `## My Contributions to this Fork\n\nThis is a fork of [${parentFullName}](https://github.com/${parentFullName}). Below are the changes and improvements I made:\n\n`;
+        } else {
+          readme += `## My Contributions\n\n`;
+        }
+
+        readme += '| Date | Commit | Description |\n|------|--------|-------------|\n';
+        for (const commit of commits) {
+          const date = new Date(commit.commit.author.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+          const shortSha = commit.sha.slice(0, 7);
+          const message = commit.commit.message.split('\n')[0];
+          readme += `| ${date} | [\`${shortSha}\`](${commit.html_url}) | ${message} |\n`;
+        }
+      }
+    }
+  } catch {
+    // If fetching commits fails, just return the README without contributions
+  }
+
+  return readme;
+}
+
 export default function ReadmePage() {
   const params = useParams<{ slug: string }>();
   
-  const { data: project, isLoading: projectLoading } = useQuery<Project>({
-    queryKey: ['/api/projects/slug', params.slug],
+  const { data: project, isLoading: projectLoading } = useProjectBySlug(params.slug);
+
+  const { data: readme, isLoading: readmeLoading, error: readmeError } = useQuery<string>({
+    queryKey: ["readme", params.slug],
+    queryFn: () => fetchReadmeWithContributions(project!.githubUrl!),
+    enabled: !!project?.githubUrl,
   });
 
-  const { data: readmeData, isLoading: readmeLoading, error: readmeError } = useQuery<{ readme: string }>({
-    queryKey: ['/api/projects/slug', params.slug, 'readme'],
-    enabled: !!project,
-  });
-
-  const readme = readmeData?.readme ? preprocessMarkdown(readmeData.readme) : '';
+  const processedReadme = readme ? preprocessMarkdown(readme) : '';
   const isLoading = projectLoading || readmeLoading;
 
   if (isLoading) {
@@ -123,7 +202,7 @@ export default function ReadmePage() {
             data-testid="readme-content"
           >
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-              {readme}
+              {processedReadme}
             </ReactMarkdown>
           </article>
         )}
