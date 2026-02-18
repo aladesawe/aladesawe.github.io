@@ -34,6 +34,17 @@
   },
   {
     "id": 4,
+    "name": "Transformer Model Attention",
+    "description": "An exploration of the transformer architecture, examining self-attention mechanisms and their role in sequence modeling.",
+    "url": null,
+    "githubUrl": "https://github.com/aladesawe/transformer_model_attention",
+    "category": "Deep Learning",
+    "language": "Jupyter Notebook",
+    "stars": null,
+    "isFeatured": false
+  },
+  {
+    "id": 5,
     "name": "Neural Networks and Deep Learning",
     "description": "Fork of Michael Nielsen's neural network codebase with Python 3.11 support, matrix-based SGD, early stopping, learning rate scheduling, and modern tensor library updates.",
     "url": null,
