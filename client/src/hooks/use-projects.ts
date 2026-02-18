@@ -16,11 +16,12 @@ export function useProjects(category?: string) {
       const allProjects = await loadProjects();
       
       // Filter by category if provided
+      let filtered = allProjects;
       if (category && category !== "All") {
-        return allProjects.filter(p => p.category === category);
+        filtered = allProjects.filter(p => p.category === category);
       }
       
-      return allProjects;
+      return filtered.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
     },
   });
 }
