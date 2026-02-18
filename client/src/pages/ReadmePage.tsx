@@ -117,7 +117,7 @@ export default function ReadmePage() {
             className="prose prose-neutral dark:prose-invert max-w-none"
             data-testid="readme-content"
           >
-            <ReactMarkdown remarkPlugins={[remarkGfm, rehypeRaw]}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
               {readme || ''}
             </ReactMarkdown>
           </article>
