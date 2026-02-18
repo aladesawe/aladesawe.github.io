@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 import type { Project } from "@shared/schema";
 
 export default function ReadmePage() {
@@ -88,7 +89,7 @@ export default function ReadmePage() {
             className="prose prose-neutral dark:prose-invert max-w-none"
             data-testid="readme-content"
           >
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
               {readme || ''}
             </ReactMarkdown>
           </article>
