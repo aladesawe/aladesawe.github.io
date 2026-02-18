@@ -12,7 +12,7 @@ export default function Home() {
   
   const { data: projects, isLoading, error } = useProjects(activeCategory === "All" ? undefined : activeCategory);
 
-  const categories = ["All", "Computer Vision", "Web", "Mobile", "Library", "Tool"];
+  const categories = ["All", "Computer Vision", "Deep Learning", "Web", "Mobile", "Library", "Tool"];
 
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">

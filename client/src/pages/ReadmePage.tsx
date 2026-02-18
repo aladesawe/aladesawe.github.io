@@ -5,50 +5,55 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
 import type { Project } from "@shared/schema";
+import type { Components } from "react-markdown";
+
+const VIDEO_EXTENSIONS = ['.mp4', '.webm', '.ogg', '.mov', '.MOV'];
+
+function isVideoUrl(url: string): boolean {
+  return VIDEO_EXTENSIONS.some(ext => url.toLowerCase().endsWith(ext.toLowerCase()));
+}
+
+const markdownComponents: Components = {
+  img: ({ src, alt, ...props }) => {
+    if (src && isVideoUrl(src)) {
+      return (
+        <video
+          src={src}
+          controls
+          width="100%"
+          style={{ maxWidth: '640px', borderRadius: '8px' }}
+          aria-label={alt || 'Video'}
+          data-testid="video-element"
+        >
+          Your browser does not support the video tag.
+        </video>
+      );
+    }
+    return <img src={src} alt={alt} {...props} />;
+  },
+};
+
+function preprocessMarkdown(md: string): string {
+  return md.replace(
+    /<video[^>]*src="([^"]+)"[^>]*>.*?<\/video>/gi,
+    (_, src) => `![Video](${src})`
+  );
+}
 
 export default function ReadmePage() {
   const params = useParams<{ slug: string }>();
   
-  const { data: project, isLoading: projectLoading } = useQuery<Project | null>({
+  const { data: project, isLoading: projectLoading } = useQuery<Project>({
     queryKey: ['/api/projects/slug', params.slug],
-    queryFn: async () => {
-      const res = await fetch("/projects.json");
-      if (!res.ok) throw new Error("Failed to fetch projects");
-      
-      const allProjects: Project[] = await res.json();
-      return allProjects.find(p => p.name.toLowerCase().replace(/\s+/g, '-') === params.slug) || null;
-    },
   });
 
   const { data: readmeData, isLoading: readmeLoading, error: readmeError } = useQuery<{ readme: string }>({
     queryKey: ['/api/projects/slug', params.slug, 'readme'],
     enabled: !!project,
-    queryFn: async () => {
-      if (!project?.githubUrl) throw new Error("No GitHub URL");
-      
-      // Extract owner/repo from GitHub URL
-      const match = project.githubUrl.match(/github\.com\/([^/]+)\/([^/]+)/);
-      if (!match) throw new Error("Invalid GitHub URL");
-      
-      const [, owner, repo] = match;
-      const repoName = repo.replace(/\.git$/, '');
-      
-      // Fetch README from GitHub raw content
-      const readmeRes = await fetch(
-        `https://raw.githubusercontent.com/${owner}/${repoName}/main/README.md`
-      ).catch(() => 
-        fetch(`https://raw.githubusercontent.com/${owner}/${repoName}/master/README.md`)
-      );
-      
-      if (!readmeRes.ok) throw new Error("README not found");
-      
-      return { readme: await readmeRes.text() };
-    },
   });
 
-  const readme = readmeData?.readme;
+  const readme = readmeData?.readme ? preprocessMarkdown(readmeData.readme) : '';
   const isLoading = projectLoading || readmeLoading;
 
   if (isLoading) {
@@ -117,8 +122,8 @@ export default function ReadmePage() {
             className="prose prose-neutral dark:prose-invert max-w-none"
             data-testid="readme-content"
           >
-            <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
-              {readme || ''}
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+              {readme}
             </ReactMarkdown>
           </article>
         )}

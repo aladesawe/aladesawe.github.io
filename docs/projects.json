@@ -9,5 +9,16 @@
     "language": "Python",
     "stars": null,
     "isFeatured": true
+  },
+  {
+    "id": 2,
+    "name": "Neural Networks and Deep Learning",
+    "description": "Fork of Michael Nielsen's neural network codebase with Python 3.11 support, matrix-based SGD, early stopping, learning rate scheduling, and modern tensor library updates.",
+    "url": null,
+    "githubUrl": "https://github.com/aladesawe/neural-networks-and-deep-learning",
+    "category": "Deep Learning",
+    "language": "Python",
+    "stars": null,
+    "isFeatured": true
   }
 ]
