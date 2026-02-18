@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api, type CreateProjectRequest } from "@shared/routes";
-import type { Project } from "@shared/schema";
+import type { Project, CreateProjectRequest } from "@shared/schema";
 
 // Load projects directly from static JSON file
 async function loadProjects(): Promise<Project[]> {
