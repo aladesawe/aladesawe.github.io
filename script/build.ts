@@ -43,8 +43,12 @@ async function buildAll() {
   await viteBuild();
 
   console.log("creating 404.html for SPA routing...");
-  const { copyFile } = await import("fs/promises");
+  const { copyFile, cp } = await import("fs/promises");
   await copyFile("dist/public/index.html", "dist/public/404.html");
+
+  console.log("copying dist/public to docs...");
+  await rm("docs", { recursive: true, force: true });
+  await cp("dist/public", "docs", { recursive: true });
 
   console.log("building server...");
   const pkg = JSON.parse(await readFile("package.json", "utf-8"));
