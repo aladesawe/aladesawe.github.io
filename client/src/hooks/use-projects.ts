@@ -21,7 +21,13 @@ export function useProjects(category?: string) {
         filtered = allProjects.filter(p => p.category === category);
       }
       
-      return filtered.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
+      return filtered.sort((a, b) => {
+        const featuredDiff = (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0);
+        if (featuredDiff !== 0) return featuredDiff;
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dateB - dateA;
+      });
     },
   });
 }

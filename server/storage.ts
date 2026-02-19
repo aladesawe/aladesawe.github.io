@@ -11,7 +11,8 @@ const projects: Project[] = [
     category: "Computer Vision",
     language: "Python",
     stars: null,
-    isFeatured: true
+    isFeatured: true,
+    createdAt: "2025-12-21T16:02:44Z"
   },
   {
     id: 2,
@@ -22,7 +23,8 @@ const projects: Project[] = [
     category: "Tool",
     language: "C",
     stars: null,
-    isFeatured: false
+    isFeatured: false,
+    createdAt: "2015-05-04T14:24:51Z"
   },
   {
     id: 3,
@@ -33,7 +35,8 @@ const projects: Project[] = [
     category: "Tool",
     language: "Java",
     stars: null,
-    isFeatured: false
+    isFeatured: false,
+    createdAt: "2014-12-19T06:03:54Z"
   },
   {
     id: 4,
@@ -44,7 +47,8 @@ const projects: Project[] = [
     category: "Deep Learning",
     language: "Jupyter Notebook",
     stars: null,
-    isFeatured: false
+    isFeatured: false,
+    createdAt: "2024-03-13T18:08:06Z"
   },
   {
     id: 5,
@@ -55,7 +59,8 @@ const projects: Project[] = [
     category: "Deep Learning",
     language: "Python",
     stars: null,
-    isFeatured: true
+    isFeatured: true,
+    createdAt: "2024-06-14T22:43:11Z"
   }
 ];
 

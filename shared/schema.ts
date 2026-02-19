@@ -11,6 +11,7 @@ export interface Project {
   language: string | null;
   stars: number | null;
   isFeatured: boolean | null;
+  createdAt: string | null;
 }
 
 export const insertProjectSchema = z.object({
@@ -22,6 +23,7 @@ export const insertProjectSchema = z.object({
   language: z.string().nullable().optional(),
   stars: z.number().nullable().optional(),
   isFeatured: z.boolean().nullable().optional(),
+  createdAt: z.string().nullable().optional(),
 });
 
 export type InsertProject = z.infer<typeof insertProjectSchema>;
