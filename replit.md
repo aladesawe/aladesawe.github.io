@@ -52,4 +52,4 @@ The `docs/` folder contains a pre-built version of the site for GitHub Pages hos
 - **PostgreSQL**: Referenced in `drizzle.config.ts` but NOT actively used. The app uses in-memory storage. If database features are added later, Drizzle ORM with PostgreSQL is the intended approach.
 - **GitHub API**: The README page fetches raw README files from `raw.githubusercontent.com` (no authentication required for public repos). The server route also has logic to proxy GitHub README requests.
 - **Google Fonts**: Inter, Fira Code, DM Sans, Architects Daughter, Geist Mono loaded via Google Fonts CDN
-- **npm packages of note**: `react-markdown`, `remark-gfm`, `rehype-raw` for rendering GitHub READMEs; `framer-motion` for animations; `wouter` for routing; `react-icons` for GitHub icons
+- **npm packages of note**: `react-markdown`, `remark-gfm`, `rehype-raw` for rendering GitHub READMEs; `framer-motion` for animations; `wouter` for routing; `react-icons` for GitHub icons; `zod` for schema validation
