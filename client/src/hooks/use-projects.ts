@@ -1,5 +1,5 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Project, CreateProjectRequest } from "@shared/schema";
+import { useQuery } from "@tanstack/react-query";
+import type { Project } from "@shared/schema";
 
 // Load projects directly from static JSON file
 async function loadProjects(): Promise<Project[]> {
@@ -50,20 +50,6 @@ export function useProject(id: number) {
     queryFn: async () => {
       const allProjects = await loadProjects();
       return allProjects.find(p => p.id === id) || null;
-    },
-  });
-}
-
-// POST /api/projects (disabled for static-only deployment)
-export function useCreateProject() {
-  const queryClient = useQueryClient();
-  
-  return useMutation({
-    mutationFn: async (data: CreateProjectRequest) => {
-      throw new Error("Creating projects is not available in static deployment. Edit projects.json and rebuild.");
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["projects"] });
     },
   });
 }
