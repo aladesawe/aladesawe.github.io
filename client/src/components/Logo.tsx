@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import LogoIcon from "./LogoIcon";
+import LogoIcon from "@/components/LogoIcon";
 
 export function Logo() {
   return (
